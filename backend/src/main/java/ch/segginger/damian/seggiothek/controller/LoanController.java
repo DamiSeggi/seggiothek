@@ -11,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/loans")
 public class LoanController {
@@ -77,12 +79,25 @@ public class LoanController {
      * Alle Loans des aktuellen Users
      */
     @GetMapping("/my-loans")
-    public ResponseEntity<?> getMyLoans(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<List<LoanDTO>> getMyLoans(@AuthenticationPrincipal Jwt jwt) {
         String keycloakId = jwt.getSubject();
         String username = jwt.getClaimAsString("preferred_username");
         String name = jwt.getClaimAsString("name");
 
         User user = userService.findOrCreateUser(keycloakId, name, username);
-        return ResponseEntity.ok(loanService.getLoansByUser(user.getId()));
+
+        List<LoanDTO> loans = loanService.getLoansByUser(user.getId())
+                .stream()
+                .map(loan -> {
+                    LoanDTO dto = new LoanDTO();
+                    dto.setId(loan.getId());
+                    dto.setBookId(loan.getBook().getId());
+                    dto.setUserId(loan.getUser().getId());
+                    dto.setReturned(loan.isReturned());
+                    return dto;
+                })
+                .toList();
+
+        return ResponseEntity.ok(loans);
     }
 }

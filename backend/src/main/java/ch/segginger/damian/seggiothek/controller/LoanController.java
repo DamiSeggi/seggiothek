@@ -7,6 +7,7 @@ import ch.segginger.damian.seggiothek.service.LoanService;
 import ch.segginger.damian.seggiothek.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +26,7 @@ public class LoanController {
         this.userService = userService;
     }
 
-    /**
-     * POST /api/v1/loans
-     * Erstelle einen Loan für den aktuell angemeldeten User
-     */
+    @PreAuthorize("hasRole('ROLE_update')")
     @PostMapping
     public ResponseEntity<LoanDTO> createLoan(
             @RequestBody LoanDTO loanDto,
@@ -51,6 +49,7 @@ public class LoanController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
+    @PreAuthorize("hasRole('ROLE_update')")
     @PutMapping("/{id}/return")
     public ResponseEntity<LoanDTO> returnLoan(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
         String keycloakId = jwt.getSubject();
@@ -74,10 +73,7 @@ public class LoanController {
         return ResponseEntity.ok(dto);
     }
 
-    /**
-     * GET /api/v1/loans/my-loans
-     * Alle Loans des aktuellen Users
-     */
+    @PreAuthorize("hasRole('ROLE_update')")
     @GetMapping("/my-loans")
     public ResponseEntity<List<LoanDTO>> getMyLoans(@AuthenticationPrincipal Jwt jwt) {
         String keycloakId = jwt.getSubject();

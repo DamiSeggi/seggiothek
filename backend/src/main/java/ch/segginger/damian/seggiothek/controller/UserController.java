@@ -4,6 +4,7 @@ import ch.segginger.damian.seggiothek.dto.UserDTO;
 import ch.segginger.damian.seggiothek.model.User;
 import ch.segginger.damian.seggiothek.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +19,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    /**
-     * GET /api/v1/users/me
-     * User wird automatisch in DB gespeichert, wenn er noch nicht existiert
-     */
+    @PreAuthorize("hasRole('ROLE_read')")
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getCurrentUser(
             @AuthenticationPrincipal Jwt jwt) {
@@ -36,9 +34,8 @@ public class UserController {
         return ResponseEntity.ok(UserDTO.from(user));
     }
 
-    /**
-     * GET /api/v1/users/{id}
-     */
+
+    @PreAuthorize("hasRole('ROLE_admin')")
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         return userService.findById(id)

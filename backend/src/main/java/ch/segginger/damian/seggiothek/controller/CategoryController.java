@@ -20,6 +20,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @PreAuthorize("hasRole('ROLE_read')")
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAll() {
         List<CategoryDTO> dtos = categoryService.findAll().stream()
@@ -34,6 +35,7 @@ public class CategoryController {
         return ResponseEntity.ok(dtos);
     }
 
+    @PreAuthorize("hasRole('ROLE_read')")
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> getById(@PathVariable Long id) {
         return categoryService.findById(id)

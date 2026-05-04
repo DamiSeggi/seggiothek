@@ -21,12 +21,6 @@ public class BookController {
     }
 
     @PreAuthorize("hasRole('ROLE_read')")
-    @GetMapping("/hello")
-    public String hello(){
-        return "Hello";
-    }
-
-
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAll() {
         List<BookDTO> dtos = bookService.findAll().stream()
@@ -44,6 +38,7 @@ public class BookController {
         return ResponseEntity.ok(dtos);
     }
 
+    @PreAuthorize("hasRole('ROLE_read')")
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getById(@PathVariable Long id) {
         return bookService.findById(id)

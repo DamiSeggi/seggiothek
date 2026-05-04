@@ -33,10 +33,11 @@ public class LoanController {
             @AuthenticationPrincipal Jwt jwt) {
 
         String keycloakId = jwt.getSubject();
+        String username = jwt.getClaimAsString("preferred_username");
+        String name = jwt.getClaimAsString("name");
 
-        // User aus DB laden (existiert nach /api/v1/users/me call)
-        User user = userService.findByKeycloakId(keycloakId)
-                .orElseThrow(() -> new RuntimeException("User nicht gefunden. Bitte zuerst /api/v1/users/me aufrufen"));
+        // User wird hier automatisch erstellt falls nötig
+        User user = userService.findOrCreateUser(keycloakId, name, username);
 
         Loan loan = loanService.createLoan(loanDto.getBookId(), user.getId());
 
@@ -45,8 +46,7 @@ public class LoanController {
         dto.setBookId(loan.getBook().getId());
         dto.setUserId(loan.getUser().getId());
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     /**
@@ -54,14 +54,12 @@ public class LoanController {
      * Alle Loans des aktuellen Users
      */
     @GetMapping("/my-loans")
-    public ResponseEntity<?> getMyLoans(
-            @AuthenticationPrincipal Jwt jwt) {
-
+    public ResponseEntity<?> getMyLoans(@AuthenticationPrincipal Jwt jwt) {
         String keycloakId = jwt.getSubject();
+        String username = jwt.getClaimAsString("preferred_username");
+        String name = jwt.getClaimAsString("name");
 
-        User user = userService.findByKeycloakId(keycloakId)
-                .orElseThrow(() -> new RuntimeException("User nicht gefunden"));
-
+        User user = userService.findOrCreateUser(keycloakId, name, username);
         return ResponseEntity.ok(loanService.getLoansByUser(user.getId()));
     }
 }

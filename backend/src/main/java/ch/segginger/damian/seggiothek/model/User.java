@@ -21,8 +21,6 @@ public class User {
 
     private String username;
 
-    private LocalDateTime createdAt;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Loan> loans = new ArrayList<>();
 
@@ -34,7 +32,6 @@ public class User {
         this.keycloakId = keycloakId;
         this.name = name;
         this.username = username;
-        this.createdAt = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -67,14 +64,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public List<Loan> getLoans() {

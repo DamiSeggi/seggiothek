@@ -18,6 +18,9 @@ public class Loan {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private boolean returned = false;
+
+
     public Loan() {
     }
 
@@ -50,4 +53,9 @@ public class Loan {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public boolean isReturned() { return returned; }
+
+    public void setReturned(boolean returned) { this.returned = returned; }
+
 }

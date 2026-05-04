@@ -38,6 +38,13 @@ public class LoanService {
         return loanRepository.save(loan);
     }
 
+    public Loan returnLoan(Long loanId) {
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RuntimeException("Loan nicht gefunden"));
+        loan.setReturned(true);
+        return loanRepository.save(loan);
+    }
+
     public List<Loan> getLoansByUser(Long userId) {
         return loanRepository.findByUserId(userId);
     }

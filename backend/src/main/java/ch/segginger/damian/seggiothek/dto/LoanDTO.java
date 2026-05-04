@@ -5,10 +5,9 @@ import java.time.LocalDate;
 public class LoanDTO {
 
     private Long id;
-
     private Long bookId;
-
     private Long userId;
+    private boolean returned;
 
     public LoanDTO() {
     }
@@ -42,4 +41,8 @@ public class LoanDTO {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
+    public boolean isReturned() { return returned; }
+
+    public void setReturned(boolean returned) { this.returned = returned; }
 }

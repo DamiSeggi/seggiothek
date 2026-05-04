@@ -49,6 +49,29 @@ public class LoanController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
+    @PutMapping("/{id}/return")
+    public ResponseEntity<LoanDTO> returnLoan(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
+        String keycloakId = jwt.getSubject();
+        String username = jwt.getClaimAsString("preferred_username");
+        String name = jwt.getClaimAsString("name");
+
+        User user = userService.findOrCreateUser(keycloakId, name, username);
+        Loan loan = loanService.getLoanById(id);
+
+        // Prüfen ob dieser Loan dem aktuellen User gehört
+        if (!loan.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        Loan returned = loanService.returnLoan(id);
+        LoanDTO dto = new LoanDTO();
+        dto.setId(returned.getId());
+        dto.setBookId(returned.getBook().getId());
+        dto.setUserId(returned.getUser().getId());
+        dto.setReturned(returned.isReturned());
+        return ResponseEntity.ok(dto);
+    }
+
     /**
      * GET /api/v1/loans/my-loans
      * Alle Loans des aktuellen Users

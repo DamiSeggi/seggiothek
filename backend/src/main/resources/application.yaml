@@ -1,8 +1,4 @@
 spring:
-  security:
-    user:
-      name: ${SECURITY_USER}
-      password: ${SECURITY_PW}
 
   datasource:
     url: ${DB_URL}
@@ -16,14 +12,17 @@ spring:
     hibernate:
       ddl-auto: update
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/ILV
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-    operations-sorter: alpha
-    tags-sorter: alpha
   api-docs:
     path: /v3/api-docs
 
 server:
   port: 9090
-

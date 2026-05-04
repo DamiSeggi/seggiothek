@@ -31,6 +31,10 @@ public class LoanService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book nicht gefunden"));
 
+        if (loanRepository.existsByBookIdAndReturnedFalse(bookId)) {
+            throw new RuntimeException("Buch ist aktuell ausgeliehen");
+        }
+
         Loan loan = new Loan();
         loan.setUser(user);
         loan.setBook(book);

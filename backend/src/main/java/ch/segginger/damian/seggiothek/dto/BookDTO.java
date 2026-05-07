@@ -1,13 +1,19 @@
 package ch.segginger.damian.seggiothek.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class BookDTO {
 
+    @Schema(description = "ID des Buches", example = "1")
     private Long id;
 
+    @Schema(description = "Titel des Buches", example = "Harry Potter")
     private String title;
 
+    @Schema(description = "Autor des Buches", example = "J.K. Rowling")
     private String author;
 
+    @Schema(description = "ID der Kategorie", example = "2")
     private Long categoryId;
 
     public BookDTO() {

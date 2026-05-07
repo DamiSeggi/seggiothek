@@ -2,11 +2,20 @@ package ch.segginger.damian.seggiothek.dto;
 
 import ch.segginger.damian.seggiothek.model.User;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class UserDTO {
 
+    @Schema(description = "ID des Users", example = "1")
     private Long id;
+
+    @Schema(description = "Keycloak ID des Users", example = "a3f1-9b2c-xyz")
     private String keycloakId;
+
+    @Schema(description = "Name des Users", example = "admin")
     private String name;
+
+    @Schema(description = "Username", example = "admin")
     private String username;
 
     public UserDTO() {

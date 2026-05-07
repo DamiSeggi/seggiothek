@@ -3,6 +3,8 @@ package ch.segginger.damian.seggiothek.controller;
 import ch.segginger.damian.seggiothek.dto.CategoryDTO;
 import ch.segginger.damian.seggiothek.model.Category;
 import ch.segginger.damian.seggiothek.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/categories")
+@Tag(name = "Category API", description = "Verwaltung von Kategorien")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -20,6 +23,10 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @Operation(
+            summary = "Alle Kategorien abrufen",
+            description = "Lädt alle Kategorien aus der Datenbank"
+    )
     @PreAuthorize("hasRole('ROLE_read')")
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAll() {
@@ -35,6 +42,10 @@ public class CategoryController {
         return ResponseEntity.ok(dtos);
     }
 
+    @Operation(
+            summary = "Kategorie anhand der ID abrufen",
+            description = "Lädt eine einzelne Kategorie"
+    )
     @PreAuthorize("hasRole('ROLE_read')")
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> getById(@PathVariable Long id) {
@@ -49,6 +60,10 @@ public class CategoryController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(
+            summary = "Neue Kategorie erstellen",
+            description = "Erstellt eine neue Kategorie"
+    )
     @PreAuthorize("hasAuthority('ROLE_admin')")
     @PostMapping
     public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO dto) {
@@ -63,6 +78,10 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    @Operation(
+            summary = "Kategorie aktualisieren",
+            description = "Aktualisiert eine bestehende Kategorie"
+    )
     @PreAuthorize("hasAuthority('ROLE_admin')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto) {
@@ -77,6 +96,11 @@ public class CategoryController {
         return ResponseEntity.ok(result);
     }
 
+
+    @Operation(
+            summary = "Kategorie löschen",
+            description = "Löscht eine Kategorie anhand der ID"
+    )
     @PreAuthorize("hasAuthority('ROLE_admin')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

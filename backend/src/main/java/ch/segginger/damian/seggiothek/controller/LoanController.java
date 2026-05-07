@@ -5,6 +5,8 @@ import ch.segginger.damian.seggiothek.model.Loan;
 import ch.segginger.damian.seggiothek.model.User;
 import ch.segginger.damian.seggiothek.service.LoanService;
 import ch.segginger.damian.seggiothek.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/loans")
+@Tag(name = "Loan API", description = "Verwaltung von Ausleihen")
 public class LoanController {
 
     private final LoanService loanService;
@@ -26,6 +29,11 @@ public class LoanController {
         this.userService = userService;
     }
 
+
+    @Operation(
+            summary = "Buch ausleihen",
+            description = "Erstellt eine neue Ausleihe für den aktuellen Benutzer"
+    )
     @PreAuthorize("hasRole('ROLE_update')")
     @PostMapping
     public ResponseEntity<LoanDTO> createLoan(
@@ -49,6 +57,11 @@ public class LoanController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
+
+    @Operation(
+            summary = "Buch zurückgeben",
+            description = "Markiert eine Ausleihe als zurückgegeben"
+    )
     @PreAuthorize("hasRole('ROLE_update')")
     @PutMapping("/{id}/return")
     public ResponseEntity<LoanDTO> returnLoan(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
@@ -73,6 +86,10 @@ public class LoanController {
         return ResponseEntity.ok(dto);
     }
 
+    @Operation(
+            summary = "Eigene Ausleihen abrufen",
+            description = "Lädt alle Ausleihen des aktuellen Benutzers"
+    )
     @PreAuthorize("hasRole('ROLE_update')")
     @GetMapping("/my-loans")
     public ResponseEntity<List<LoanDTO>> getMyLoans(@AuthenticationPrincipal Jwt jwt) {

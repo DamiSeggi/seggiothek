@@ -23,6 +23,6 @@ public class OpenApiConfig {
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")))
-                .info(new Info().title("Meine API").version("1.0"));
+                .info(new Info().title("Seggiothek API").version("1.0"));
     }
 }

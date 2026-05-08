@@ -22,7 +22,7 @@ Datenbank `seggiothek` muss vorhanden sein.
 ```bash
 kc.bat start-dev --http-port 8081
 ```
-**Realm, Rollen, User gemäss Dokumentation**
+**Realm, Rollen, User gemäss Dokumentation (Oder realm-export.json unter keycloak im Source)**
 
 ### 3. Spring Boot starten
 ```bash
@@ -87,3 +87,9 @@ DB_URL: jdbc:postgresql://localhost:5432/seggiothek
 DB_USER: postgres
 DB_PASSWORD: test
 ```
+
+---
+
+## GitHub
+
+https://github.com/DamiSeggi/seggiothek

@@ -4,6 +4,7 @@ import ch.segginger.damian.seggiothek.model.Book;
 import ch.segginger.damian.seggiothek.model.Category;
 import ch.segginger.damian.seggiothek.repository.BookRepository;
 import ch.segginger.damian.seggiothek.repository.CategoryRepository;
+import ch.segginger.damian.seggiothek.repository.LoanRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +15,12 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
+    private final LoanRepository loanRepository;
 
-    public BookService(BookRepository bookRepository, CategoryRepository categoryRepository) {
+    public BookService(BookRepository bookRepository, CategoryRepository categoryRepository, LoanRepository loanRepository) {
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
+        this.loanRepository = loanRepository;
     }
 
     public List<Book> findAll() {
@@ -49,6 +52,7 @@ public class BookService {
     }
 
     public void delete(Long id) {
+        loanRepository.deleteByBookId(id);
         bookRepository.deleteById(id);
     }
 }

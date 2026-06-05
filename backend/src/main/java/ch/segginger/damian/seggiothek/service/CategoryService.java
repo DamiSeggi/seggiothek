@@ -1,7 +1,11 @@
 package ch.segginger.damian.seggiothek.service;
 
+import ch.segginger.damian.seggiothek.model.Book;
 import ch.segginger.damian.seggiothek.model.Category;
+import ch.segginger.damian.seggiothek.repository.BookRepository;
 import ch.segginger.damian.seggiothek.repository.CategoryRepository;
+import ch.segginger.damian.seggiothek.repository.LoanRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +15,13 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final BookRepository bookRepository;
+    private final LoanRepository loanRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, BookRepository bookRepository, LoanRepository loanRepository) {
         this.categoryRepository = categoryRepository;
+        this.bookRepository = bookRepository;
+        this.loanRepository = loanRepository;
     }
 
     public List<Category> findAll() {
@@ -36,7 +44,13 @@ public class CategoryService {
         return categoryRepository.save(existing);
     }
 
+    @Transactional
     public void delete(Long id) {
+        List<Book> books = bookRepository.findByCategoryId(id);
+        for (Book book : books) {
+            loanRepository.deleteByBookId(book.getId());
+        }
+        bookRepository.deleteByCategoryId(id);
         categoryRepository.deleteById(id);
     }
 }

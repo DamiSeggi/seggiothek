@@ -12,13 +12,23 @@ import { Category } from '../../core/models/category.model';
   standalone: true,
   imports: [NgFor, NgIf],
   template: `
-    <button (click)="goBack()">← Zurück</button>
-    <h2>{{ category?.name }}</h2>
+    <div class="page">
+<button class="btn-back" (click)="goBack()">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 18 9 12 15 6"></polyline>
+  </svg>
+</button>      <h2 style="margin-top: 1rem;">{{ category?.name }}</h2>
 
-    <div *ngFor="let book of books" style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-      <strong>{{ book.title }}</strong> – {{ book.author }}
-      <button *ngIf="book.available" (click)="borrow(book.id)">Ausleihen</button>
-      <span *ngIf="!book.available">Ausgeliehen</span>
+      <div class="card" *ngFor="let book of books">
+        <div>
+          <div class="card-title">{{ book.title }}</div>
+          <div class="card-sub">{{ book.author }}</div>
+        </div>
+        <div class="card-actions">
+          <button *ngIf="book.available" (click)="borrow(book.id)">Ausleihen</button>
+          <span *ngIf="!book.available" class="badge badge-unavailable">Ausgeliehen</span>
+        </div>
+      </div>
     </div>
   `
 })

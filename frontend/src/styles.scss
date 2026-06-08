@@ -1,3 +1,311 @@
-.index{
-    
+// =====================
+// RESET & BASE
+// =====================
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f0f4f8;
+  color: #1a1a2e;
+}
+
+// =====================
+// TYPOGRAPHY
+// =====================
+h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1a1a2e;
+}
+
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1a1a2e;
+}
+
+// =====================
+// BUTTONS
+// =====================
+button {
+  background: #1565c0;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+button:hover {
+  background: #1976d2;
+}
+
+button.btn-danger {
+  background: #c62828;
+}
+
+button.btn-danger:hover {
+  background: #d32f2f;
+}
+
+button.btn-secondary {
+  background: #fff;
+  color: #1565c0;
+  border: 1px solid #1565c0;
+}
+
+button.btn-secondary:hover {
+  background: #e3f2fd;
+}
+
+button.btn-back {
+  background: none;
+  border: none;
+  color: #1565c0;
+  font-size: 1.4rem;
+  padding: 0;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  transition: color 0.15s;
+}
+
+button.btn-back:hover {
+  color: #1976d2;
+}
+
+// =====================
+// FORMS
+// =====================
+input, select {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #cfd8e3;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.15s;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #1565c0;
+}
+
+// =====================
+// LAYOUT
+// =====================
+.page {
+  padding: 1.5rem;
+  padding-bottom: 70px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.main-content {
+  padding: 1.5rem;
+  padding-bottom: 70px;
+}
+
+// =====================
+// CARD
+// =====================
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e0e7ef;
+  transition: border-color 0.15s;
+}
+
+.card:hover {
+  border-color: #b0c4de;
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.card-sub {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 0.2rem;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+// =====================
+// BADGES
+// =====================
+.badge {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 500;
+  margin-top: 0.4rem;
+  display: inline-block;
+}
+
+.badge-active {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge-returned {
+  background: #f1f1f1;
+  color: #777;
+}
+
+.badge-unavailable {
+  background: #fdecea;
+  color: #c62828;
+}
+
+// =====================
+// MODAL
+// =====================
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #fff;
+  padding: 1.5rem;
+  width: 320px;
+  border-radius: 10px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+// =====================
+// BOTTOM NAV
+// =====================
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #1565c0;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  height: 56px;
+}
+
+.bottom-nav a {
+  text-decoration: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.bottom-nav a:hover {
+  color: #fff;
+}
+
+.bottom-nav a.active {
+  color: #fff;
+  font-weight: 700;
+}
+
+.nav-spacer {
+  flex: 1;
+}
+
+.nav-links {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+}
+
+.nav-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 0.1rem;
+}
+
+.nav-user {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.nav-logout {
+  background: none;
+  border: none;
+  color: #ef9a9a;
+  font-size: 0.78rem;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.nav-logout:hover {
+  background: none;
+  color: #e57373;
+}
+
+// =====================
+// RESPONSIVE
+// =====================
+@media (max-width: 570px) {
+  .bottom-nav {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0.5rem 1rem;
+    gap: 0.25rem;
+  }
+
+  .nav-spacer {
+    display: none;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    padding-top: 0.25rem;
+  }
+
+  .nav-right {
+    width: 100%;
+    justify-content: flex-end;
+    padding-bottom: 0.4rem;
+    padding-top: 1rem;
+  }
+}
+
+@media (max-width: 320px) {
+  button {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.7rem;
+  }
 }

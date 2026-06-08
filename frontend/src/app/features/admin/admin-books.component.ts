@@ -11,26 +11,36 @@ import { Category } from '../../core/models/category.model';
   standalone: true,
   imports: [NgFor, NgIf, FormsModule],
   template: `
-    <h2>Bücher verwalten</h2>
+    <div class="page">
+      <h2>Bücher verwalten</h2>
+      <button (click)="openModal()">Neues Buch</button>
 
-    <button (click)="openModal()">Neues Buch</button>
+      <div style="margin-top: 1rem;">
+        <div class="card" *ngFor="let book of books">
+          <div>
+            <div class="card-title">{{ book.title }}</div>
+            <div class="card-sub">{{ book.author }} · {{ getCategoryName(book.categoryId) }}</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-secondary" (click)="openModal(book)">✏️</button>
+            <button class="btn-danger" (click)="delete(book.id)">🗑️</button>
+          </div>
+        </div>
+      </div>
 
-    <div *ngFor="let book of books" style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-      <span>{{ book.title }} – {{ book.author }} ({{ getCategoryName(book.categoryId) }})</span>
-      <button (click)="openModal(book)">✏️</button>
-      <button (click)="delete(book.id)">🗑️</button>
-    </div>
-
-    <div *ngIf="showModal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center;">
-      <div style="background:#fff; padding:1rem; width:300px;">
-        <h3>{{ editId ? 'Buch bearbeiten' : 'Neues Buch' }}</h3>
-        <input [(ngModel)]="form.title" placeholder="Titel" style="display:block; width:100%; margin-bottom:0.5rem;" />
-        <input [(ngModel)]="form.author" placeholder="Autor" style="display:block; width:100%; margin-bottom:0.5rem;" />
-        <select [(ngModel)]="form.categoryId" style="display:block; width:100%; margin-bottom:0.5rem;">
-          <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-        </select>
-        <button (click)="save()">Speichern</button>
-        <button (click)="closeModal()">Abbrechen</button>
+      <div class="modal-overlay" *ngIf="showModal">
+        <div class="modal">
+          <h3>{{ editId ? 'Buch bearbeiten' : 'Neues Buch' }}</h3>
+          <input [(ngModel)]="form.title" placeholder="Titel" />
+          <input [(ngModel)]="form.author" placeholder="Autor" />
+          <select [(ngModel)]="form.categoryId">
+            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+          </select>
+          <div class="modal-actions">
+            <button (click)="save()">Speichern</button>
+            <button class="btn-secondary" (click)="closeModal()">Abbrechen</button>
+          </div>
+        </div>
       </div>
     </div>
   `

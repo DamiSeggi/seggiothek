@@ -11,14 +11,23 @@ import { Book } from '../../core/models/book.model';
   standalone: true,
   imports: [NgFor, NgIf],
   template: `
-    <h2>Meine Ausleihen</h2>
+    <div class="page">
+      <h2>Meine Ausleihen</h2>
+      <button (click)="goToBorrow()">+ Buch ausleihen</button>
 
-    <button (click)="goToBorrow()">Buch ausleihen</button>
-
-    <div *ngFor="let loan of loans">
-      <span>{{ getBookTitle(loan.bookId) }}</span>
-      <span> – {{ loan.returned ? 'Zurückgegeben' : 'Aktiv' }}</span>
-      <button *ngIf="!loan.returned" (click)="returnLoan(loan.id)">Zurückgeben</button>
+      <div style="margin-top: 1rem;">
+        <div class="card" *ngFor="let loan of loans">
+          <div>
+            <div class="card-title">{{ getBookTitle(loan.bookId) }}</div>
+            <span class="badge" [class.badge-active]="!loan.returned" [class.badge-returned]="loan.returned">
+              {{ loan.returned ? 'Zurückgegeben' : 'Aktiv' }}
+            </span>
+          </div>
+          <div class="card-actions">
+            <button *ngIf="!loan.returned" class="btn-secondary" (click)="returnLoan(loan.id)">Zurückgeben</button>
+          </div>
+        </div>
+      </div>
     </div>
   `
 })

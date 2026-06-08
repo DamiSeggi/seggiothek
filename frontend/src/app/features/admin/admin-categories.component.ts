@@ -9,23 +9,30 @@ import { Category } from '../../core/models/category.model';
   standalone: true,
   imports: [NgFor, NgIf, FormsModule],
   template: `
-    <h2>Kategorien verwalten</h2>
+    <div class="page">
+      <h2>Kategorien verwalten</h2>
+      <button (click)="openModal()">Neue Kategorie</button>
 
-    <button (click)="openModal()">Neue Kategorie</button>
+      <div style="margin-top: 1rem;">
+        <div class="card" *ngFor="let cat of categories">
+          <div class="card-title">{{ cat.name }}</div>
+          <div class="card-actions">
+            <button class="btn-secondary" (click)="openModal(cat)">✏️</button>
+            <button class="btn-danger" (click)="delete(cat.id)">🗑️</button>
+          </div>
+        </div>
+      </div>
 
-    <div *ngFor="let cat of categories" style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-      <span>{{ cat.name }}</span>
-      <button (click)="openModal(cat)">✏️</button>
-      <button (click)="delete(cat.id)">🗑️</button>
-    </div>
-
-    <div *ngIf="showModal" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center;">
-      <div style="background:#fff; padding:1rem; width:300px;">
-        <h3>{{ editId ? 'Kategorie bearbeiten' : 'Neue Kategorie' }}</h3>
-        <input [(ngModel)]="form.name" placeholder="Name" style="display:block; width:100%; margin-bottom:0.5rem;" />
-        <input [(ngModel)]="form.description" placeholder="Beschreibung" style="display:block; width:100%; margin-bottom:0.5rem;" />
-        <button (click)="save()">Speichern</button>
-        <button (click)="closeModal()">Abbrechen</button>
+      <div class="modal-overlay" *ngIf="showModal">
+        <div class="modal">
+          <h3>{{ editId ? 'Kategorie bearbeiten' : 'Neue Kategorie' }}</h3>
+          <input [(ngModel)]="form.name" placeholder="Name" />
+          <input [(ngModel)]="form.description" placeholder="Beschreibung" />
+          <div class="modal-actions">
+            <button (click)="save()">Speichern</button>
+            <button class="btn-secondary" (click)="closeModal()">Abbrechen</button>
+          </div>
+        </div>
       </div>
     </div>
   `

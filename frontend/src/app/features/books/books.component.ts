@@ -9,13 +9,20 @@ import { Category } from '../../core/models/category.model';
   standalone: true,
   imports: [NgFor],
   template: `
-    <h2>Kategorien</h2>
-
-    <div *ngFor="let category of categories" (click)="goToCategory(category.id)" style="cursor:pointer; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-      <strong>{{ category.name }}</strong>
-      <p>{{ category.description }}</p>
+    <div class="page">
+      <h2>Kategorien</h2>
+      <div class="card category-card" *ngFor="let category of categories" (click)="goToCategory(category.id)">
+        <div>
+          <div class="card-title">{{ category.name }}</div>
+          <div class="card-sub">{{ category.description }}</div>
+        </div>
+        <span>›</span>
+      </div>
     </div>
-  `
+  `,
+  styles: [`
+    .category-card { cursor: pointer; }
+  `]
 })
 export class BooksComponent implements OnInit {
   categories: Category[] = [];

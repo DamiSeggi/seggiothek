@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../../core/services/book.service';
 import { CategoryService } from '../../core/services/category.service';
@@ -10,14 +10,15 @@ import { Category } from '../../core/models/category.model';
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   template: `
     <button (click)="goBack()">← Zurück</button>
     <h2>{{ category?.name }}</h2>
 
     <div *ngFor="let book of books" style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
       <strong>{{ book.title }}</strong> – {{ book.author }}
-      <button (click)="borrow(book.id)">Ausleihen</button>
+      <button *ngIf="book.available" (click)="borrow(book.id)">Ausleihen</button>
+      <span *ngIf="!book.available">Ausgeliehen</span>
     </div>
   `
 })

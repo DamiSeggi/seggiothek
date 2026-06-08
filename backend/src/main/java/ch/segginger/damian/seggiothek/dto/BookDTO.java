@@ -16,45 +16,23 @@ public class BookDTO {
     @Schema(description = "ID der Kategorie", example = "2")
     private Long categoryId;
 
-    public BookDTO() {
-    }
+    @Schema(description = "Verfügbarkeit des Buches", example = "true")
+    private boolean available;
 
-    public BookDTO(Long id, String title, String author, Long categoryId) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.categoryId = categoryId;
-    }
+    public BookDTO() {}
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
+    public boolean isAvailable() { return available; }
+    public void setAvailable(boolean available) { this.available = available; }
 }

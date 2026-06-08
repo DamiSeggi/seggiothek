@@ -52,7 +52,9 @@ export class BookListComponent implements OnInit {
     });
     this.bookService.getAll().subscribe({
       next: books => {
-        this.books = books.filter(b => b.categoryId === id);
+        this.books = books
+          .filter(b => b.categoryId === id)
+          .sort((a, b) => (a.available === b.available) ? 0 : a.available ? -1 : 1);
         this.cdr.detectChanges();
       }
     });

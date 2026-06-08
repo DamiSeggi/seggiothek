@@ -44,7 +44,10 @@ export class MyLoansComponent implements OnInit {
 
   ngOnInit() {
     this.loanService.getMyLoans().subscribe({
-      next: loans => { this.loans = loans; this.cdr.detectChanges(); }
+      next: loans => {
+        this.loans = loans.sort((a, b) => (a.returned === b.returned) ? 0 : a.returned ? 1 : -1);
+        this.cdr.detectChanges();
+      }
     });
     this.bookService.getAll().subscribe({
       next: books => { this.books = books; this.cdr.detectChanges(); }
@@ -58,7 +61,10 @@ export class MyLoansComponent implements OnInit {
   returnLoan(id: number) {
     this.loanService.returnLoan(id).subscribe(() => {
       this.loanService.getMyLoans().subscribe({
-        next: loans => { this.loans = loans; this.cdr.detectChanges(); }
+        next: loans => {
+          this.loans = loans.sort((a, b) => (a.returned === b.returned) ? 0 : a.returned ? 1 : -1);
+          this.cdr.detectChanges();
+        }
       });
     });
   }

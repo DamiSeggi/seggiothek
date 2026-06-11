@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import jakarta.transaction.Transactional;
 
 @Service
 public class BookService {
@@ -51,6 +52,7 @@ public class BookService {
         return bookRepository.save(existing);
     }
 
+    @Transactional
     public void delete(Long id) {
         loanRepository.deleteByBookId(id);
         bookRepository.deleteById(id);

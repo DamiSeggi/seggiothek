@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+
 import { Router } from '@angular/router';
 import { LoanService } from '../../core/services/loan.service';
 import { BookService } from '../../core/services/book.service';
@@ -9,38 +9,40 @@ import { Book } from '../../core/models/book.model';
 @Component({
   selector: 'app-my-loans',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [],
   template: `
     <div class="page">
       <h2>Meine Ausleihen</h2>
       <button (click)="goToBorrow()">+ Buch ausleihen</button>
-
+    
       <div style="margin-top: 1rem;">
-        <div class="card" *ngFor="let loan of loans">
-          <div>
-            <div class="card-title">{{ getBookTitle(loan.bookId) }}</div>
-            <span class="badge" [class.badge-active]="!loan.returned" [class.badge-returned]="loan.returned">
-              {{ loan.returned ? 'Zurückgegeben' : 'Aktiv' }}
-            </span>
+        @for (loan of loans; track loan) {
+          <div class="card">
+            <div>
+              <div class="card-title">{{ getBookTitle(loan.bookId) }}</div>
+              <span class="badge" [class.badge-active]="!loan.returned" [class.badge-returned]="loan.returned">
+                {{ loan.returned ? 'Zurückgegeben' : 'Aktiv' }}
+              </span>
+            </div>
+            <div class="card-actions">
+              @if (!loan.returned) {
+                <button class="btn-secondary" (click)="returnLoan(loan.id)">Zurückgeben</button>
+              }
+            </div>
           </div>
-          <div class="card-actions">
-            <button *ngIf="!loan.returned" class="btn-secondary" (click)="returnLoan(loan.id)">Zurückgeben</button>
-          </div>
-        </div>
+        }
       </div>
     </div>
-  `
+    `
 })
 export class MyLoansComponent implements OnInit {
+  private loanService = inject(LoanService);
+  private bookService = inject(BookService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+
   loans: Loan[] = [];
   books: Book[] = [];
-
-  constructor(
-    private loanService: LoanService,
-    private bookService: BookService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
 
   ngOnInit() {
     this.loanService.getMyLoans().subscribe({

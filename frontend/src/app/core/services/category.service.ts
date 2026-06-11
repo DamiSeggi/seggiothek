@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Category } from '../models/category.model';
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  private url = 'http://localhost:9090/api/v1/categories';
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  private url = 'http://localhost:9090/api/v1/categories';
 
   getAll(): Observable<Category[]> {
     return this.http.get<Category[]>(this.url);

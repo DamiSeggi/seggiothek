@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+
 import { Router } from '@angular/router';
 import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
@@ -7,31 +7,35 @@ import { Category } from '../../core/models/category.model';
 @Component({
   selector: 'app-books',
   standalone: true,
-  imports: [NgFor],
+  imports: [],
   template: `
     <div class="page">
       <h2>Kategorien</h2>
-      <div class="card category-card" *ngFor="let category of categories" (click)="goToCategory(category.id)">
-        <div>
-          <div class="card-title">{{ category.name }}</div>
-          <div class="card-sub">{{ category.description }}</div>
+      @for (category of categories; track category) {
+        <div class="card category-card" 
+            (click)="goToCategory(category.id)"
+            (keyup.enter)="goToCategory(category.id)"
+            tabindex="0"
+            role="button">
+          <div>
+            <div class="card-title">{{ category.name }}</div>
+            <div class="card-sub">{{ category.description }}</div>
+          </div>
+          <span>›</span>
         </div>
-        <span>›</span>
-      </div>
+      }
     </div>
-  `,
+    `,
   styles: [`
     .category-card { cursor: pointer; }
   `]
 })
 export class BooksComponent implements OnInit {
-  categories: Category[] = [];
+  private categoryService = inject(CategoryService);
+  private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
-  constructor(
-    private categoryService: CategoryService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+  categories: Category[] = [];
 
   ngOnInit() {
     this.categoryService.getAll().subscribe({

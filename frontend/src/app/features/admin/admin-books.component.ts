@@ -4,7 +4,7 @@ import { BookService } from '../../core/services/book.service';
 import { CategoryService } from '../../core/services/category.service';
 import { Book } from '../../core/models/book.model';
 import { Category } from '../../core/models/category.model';
-import { ConfirmDialogComponent } from '../confirm-dialog.component';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
 
 @Component({
   selector: 'app-admin-books',

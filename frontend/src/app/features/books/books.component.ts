@@ -10,7 +10,7 @@ import { Category } from '../../core/models/category.model';
   imports: [],
   template: `
     <div class="page">
-      <h2>Kategorien</h2>
+      <h2>Bücher-Kategorien</h2>
       @for (category of categories; track category) {
         <div class="card category-card" 
             (click)="goToCategory(category.id)"

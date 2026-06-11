@@ -51,7 +51,7 @@ import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
               <small style="color: #c62828;">{{ errors.description }}</small>
             }
             <div class="modal-actions">
-              <button (click)="save()">Speichern</button>
+              <button (click)="save()" [disabled]="!form.name.trim() || form.name.length < 2 || !form.description.trim()">Speichern</button>
               <button class="btn-secondary" (click)="closeModal()">Abbrechen</button>
             </div>
           </div>

@@ -82,6 +82,11 @@ button.btn-back:hover {
   color: #1976d2;
 }
 
+button[disabled] {
+  background: #b0bec5;
+  cursor: not-allowed;
+}
+
 // =====================
 // FORMS
 // =====================

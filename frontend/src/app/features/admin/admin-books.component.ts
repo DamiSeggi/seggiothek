@@ -4,11 +4,12 @@ import { BookService } from '../../core/services/book.service';
 import { CategoryService } from '../../core/services/category.service';
 import { Book } from '../../core/models/book.model';
 import { Category } from '../../core/models/category.model';
+import { ConfirmDialogComponent } from '../confirm-dialog.component';
 
 @Component({
   selector: 'app-admin-books',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ConfirmDialogComponent],
   template: `
     <div class="page">
       <h2>Bücher verwalten</h2>
@@ -70,6 +71,14 @@ import { Category } from '../../core/models/category.model';
           </div>
         </div>
       }
+
+      @if (showConfirm) {
+        <app-confirm-dialog
+          title="Buch löschen"
+          message="Möchtest du dieses Buch wirklich löschen?"
+          (confirmed)="confirmDelete()"
+          (cancelled)="showConfirm = false" />
+      }
     </div>
   `
 })
@@ -81,6 +90,8 @@ export class AdminBooksComponent implements OnInit {
   books: Book[] = [];
   categories: Category[] = [];
   showModal = false;
+  showConfirm = false;
+  deleteId: number | null = null;
   editId: number | null = null;
   form = { title: '', author: '', categoryId: 0 };
   errors = { title: '', author: '', categoryId: '' };
@@ -148,7 +159,6 @@ export class AdminBooksComponent implements OnInit {
 
   save() {
     if (!this.validate()) return;
-
     const action = this.editId
       ? this.bookService.update(this.editId, this.form)
       : this.bookService.create(this.form);
@@ -156,6 +166,16 @@ export class AdminBooksComponent implements OnInit {
   }
 
   delete(id: number) {
-    this.bookService.delete(id).subscribe(() => this.load());
+    this.deleteId = id;
+    this.showConfirm = true;
+  }
+
+  confirmDelete() {
+    if (this.deleteId) {
+      this.bookService.delete(this.deleteId).subscribe(() => {
+        this.load();
+        this.showConfirm = false;
+      });
+    }
   }
 }

@@ -2,11 +2,12 @@ import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
+import { ConfirmDialogComponent } from '../confirm-dialog.component';
 
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ConfirmDialogComponent],
   template: `
     <div class="page">
       <h2>Kategorien verwalten</h2>
@@ -56,6 +57,14 @@ import { Category } from '../../core/models/category.model';
           </div>
         </div>
       }
+
+      @if (showConfirm) {
+        <app-confirm-dialog
+          title="Kategorie löschen"
+          message="Möchtest du diese Kategorie wirklich löschen?"
+          (confirmed)="confirmDelete()"
+          (cancelled)="showConfirm = false" />
+      }
     </div>
   `
 })
@@ -65,6 +74,8 @@ export class AdminCategoriesComponent implements OnInit {
 
   categories: Category[] = [];
   showModal = false;
+  showConfirm = false;
+  deleteId: number | null = null;
   editId: number | null = null;
   form = { name: '', description: '' };
   errors = { name: '', description: '' };
@@ -117,7 +128,6 @@ export class AdminCategoriesComponent implements OnInit {
 
   save() {
     if (!this.validate()) return;
-
     const action = this.editId
       ? this.categoryService.update(this.editId, this.form)
       : this.categoryService.create(this.form);
@@ -125,6 +135,16 @@ export class AdminCategoriesComponent implements OnInit {
   }
 
   delete(id: number) {
-    this.categoryService.delete(id).subscribe(() => this.load());
+    this.deleteId = id;
+    this.showConfirm = true;
+  }
+
+  confirmDelete() {
+    if (this.deleteId) {
+      this.categoryService.delete(this.deleteId).subscribe(() => {
+        this.load();
+        this.showConfirm = false;
+      });
+    }
   }
 }

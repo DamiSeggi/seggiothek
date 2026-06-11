@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
-
 import { FormsModule } from '@angular/forms';
 import { BookService } from '../../core/services/book.service';
 import { CategoryService } from '../../core/services/category.service';
@@ -14,7 +13,7 @@ import { Category } from '../../core/models/category.model';
     <div class="page">
       <h2>Bücher verwalten</h2>
       <button (click)="openModal()">Neues Buch</button>
-    
+
       <div style="margin-top: 1rem;">
         @for (book of books; track book) {
           <div class="card">
@@ -42,18 +41,28 @@ import { Category } from '../../core/models/category.model';
           </div>
         }
       </div>
-    
+
       @if (showModal) {
         <div class="modal-overlay">
           <div class="modal">
             <h3>{{ editId ? 'Buch bearbeiten' : 'Neues Buch' }}</h3>
-            <input [(ngModel)]="form.title" placeholder="Titel" />
-            <input [(ngModel)]="form.author" placeholder="Autor" />
+            <input [(ngModel)]="form.title" placeholder="Titel" maxlength="100" />
+            @if (errors.title) {
+              <small style="color: #c62828;">{{ errors.title }}</small>
+            }
+            <input [(ngModel)]="form.author" placeholder="Autor" maxlength="100" />
+            @if (errors.author) {
+              <small style="color: #c62828;">{{ errors.author }}</small>
+            }
             <select [(ngModel)]="form.categoryId">
+              <option [value]="0" disabled>Kategorie wählen</option>
               @for (cat of categories; track cat) {
                 <option [value]="cat.id">{{ cat.name }}</option>
               }
             </select>
+            @if (errors.categoryId) {
+              <small style="color: #c62828;">{{ errors.categoryId }}</small>
+            }
             <div class="modal-actions">
               <button (click)="save()">Speichern</button>
               <button class="btn-secondary" (click)="closeModal()">Abbrechen</button>
@@ -62,7 +71,7 @@ import { Category } from '../../core/models/category.model';
         </div>
       }
     </div>
-    `
+  `
 })
 export class AdminBooksComponent implements OnInit {
   private bookService = inject(BookService);
@@ -74,6 +83,7 @@ export class AdminBooksComponent implements OnInit {
   showModal = false;
   editId: number | null = null;
   form = { title: '', author: '', categoryId: 0 };
+  errors = { title: '', author: '', categoryId: '' };
 
   ngOnInit() {
     this.load();
@@ -100,6 +110,7 @@ export class AdminBooksComponent implements OnInit {
       this.editId = null;
       this.form = { title: '', author: '', categoryId: 0 };
     }
+    this.errors = { title: '', author: '', categoryId: '' };
     this.showModal = true;
   }
 
@@ -107,18 +118,41 @@ export class AdminBooksComponent implements OnInit {
     this.showModal = false;
   }
 
-  save() {
-    if (this.editId) {
-      this.bookService.update(this.editId, this.form).subscribe(() => {
-        this.load();
-        this.closeModal();
-      });
-    } else {
-      this.bookService.create(this.form).subscribe(() => {
-        this.load();
-        this.closeModal();
-      });
+  validate(): boolean {
+    this.errors = { title: '', author: '', categoryId: '' };
+    let valid = true;
+
+    if (!this.form.title.trim()) {
+      this.errors.title = 'Titel ist erforderlich.';
+      valid = false;
+    } else if (this.form.title.length < 2) {
+      this.errors.title = 'Titel muss mindestens 2 Zeichen lang sein.';
+      valid = false;
     }
+
+    if (!this.form.author.trim()) {
+      this.errors.author = 'Autor ist erforderlich.';
+      valid = false;
+    } else if (this.form.author.length < 2) {
+      this.errors.author = 'Autor muss mindestens 2 Zeichen lang sein.';
+      valid = false;
+    }
+
+    if (!this.form.categoryId || this.form.categoryId === 0) {
+      this.errors.categoryId = 'Bitte eine Kategorie wählen.';
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  save() {
+    if (!this.validate()) return;
+
+    const action = this.editId
+      ? this.bookService.update(this.editId, this.form)
+      : this.bookService.create(this.form);
+    action.subscribe(() => { this.load(); this.closeModal(); });
   }
 
   delete(id: number) {

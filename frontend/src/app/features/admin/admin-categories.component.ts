@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
-
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
@@ -12,7 +11,7 @@ import { Category } from '../../core/models/category.model';
     <div class="page">
       <h2>Kategorien verwalten</h2>
       <button (click)="openModal()">Neue Kategorie</button>
-    
+
       <div style="margin-top: 1rem;">
         @for (cat of categories; track cat) {
           <div class="card">
@@ -37,13 +36,19 @@ import { Category } from '../../core/models/category.model';
           </div>
         }
       </div>
-    
+
       @if (showModal) {
         <div class="modal-overlay">
           <div class="modal">
             <h3>{{ editId ? 'Kategorie bearbeiten' : 'Neue Kategorie' }}</h3>
-            <input [(ngModel)]="form.name" placeholder="Name" />
-            <input [(ngModel)]="form.description" placeholder="Beschreibung" />
+            <input [(ngModel)]="form.name" placeholder="Name" maxlength="50" />
+            @if (errors.name) {
+              <small style="color: #c62828;">{{ errors.name }}</small>
+            }
+            <input [(ngModel)]="form.description" placeholder="Beschreibung" maxlength="200" />
+            @if (errors.description) {
+              <small style="color: #c62828;">{{ errors.description }}</small>
+            }
             <div class="modal-actions">
               <button (click)="save()">Speichern</button>
               <button class="btn-secondary" (click)="closeModal()">Abbrechen</button>
@@ -52,7 +57,7 @@ import { Category } from '../../core/models/category.model';
         </div>
       }
     </div>
-    `
+  `
 })
 export class AdminCategoriesComponent implements OnInit {
   private categoryService = inject(CategoryService);
@@ -62,6 +67,7 @@ export class AdminCategoriesComponent implements OnInit {
   showModal = false;
   editId: number | null = null;
   form = { name: '', description: '' };
+  errors = { name: '', description: '' };
 
   ngOnInit() {
     this.load();
@@ -81,6 +87,7 @@ export class AdminCategoriesComponent implements OnInit {
       this.editId = null;
       this.form = { name: '', description: '' };
     }
+    this.errors = { name: '', description: '' };
     this.showModal = true;
   }
 
@@ -88,18 +95,33 @@ export class AdminCategoriesComponent implements OnInit {
     this.showModal = false;
   }
 
-  save() {
-    if (this.editId) {
-      this.categoryService.update(this.editId, this.form).subscribe(() => {
-        this.load();
-        this.closeModal();
-      });
-    } else {
-      this.categoryService.create(this.form).subscribe(() => {
-        this.load();
-        this.closeModal();
-      });
+  validate(): boolean {
+    this.errors = { name: '', description: '' };
+    let valid = true;
+
+    if (!this.form.name.trim()) {
+      this.errors.name = 'Name ist erforderlich.';
+      valid = false;
+    } else if (this.form.name.length < 2) {
+      this.errors.name = 'Name muss mindestens 2 Zeichen lang sein.';
+      valid = false;
     }
+
+    if (!this.form.description.trim()) {
+      this.errors.description = 'Beschreibung ist erforderlich.';
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  save() {
+    if (!this.validate()) return;
+
+    const action = this.editId
+      ? this.categoryService.update(this.editId, this.form)
+      : this.categoryService.create(this.form);
+    action.subscribe(() => { this.load(); this.closeModal(); });
   }
 
   delete(id: number) {

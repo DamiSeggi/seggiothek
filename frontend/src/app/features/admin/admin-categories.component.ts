@@ -86,7 +86,7 @@ export class AdminCategoriesComponent implements OnInit {
 
   load() {
     this.categoryService.getAll().subscribe({
-      next: cats => { this.categories = cats; this.cdr.detectChanges(); }
+      next: cats => { this.categories = cats.reverse(); this.cdr.detectChanges(); }
     });
   }
 

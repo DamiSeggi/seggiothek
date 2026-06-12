@@ -105,7 +105,7 @@ export class AdminBooksComponent implements OnInit {
 
   load() {
     this.bookService.getAll().subscribe({
-      next: books => { this.books = books; this.cdr.detectChanges(); }
+      next: books => { this.books = books.reverse(); this.cdr.detectChanges(); }
     });
   }
 

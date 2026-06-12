@@ -40,3 +40,5 @@ INSERT INTO books (id, title, author, category_id) VALUES (30, 'Sein und Zeit', 
 INSERT INTO books (id, title, author, category_id) VALUES (31, 'Also sprach Zarathustra', 'Friedrich Nietzsche', 8) ON CONFLICT DO NOTHING;
 INSERT INTO books (id, title, author, category_id) VALUES (32, 'Der Staat', 'Platon', 8) ON CONFLICT DO NOTHING;
 INSERT INTO books (id, title, author, category_id) VALUES (33, 'Kritik der reinen Vernunft', 'Immanuel Kant', 8) ON CONFLICT DO NOTHING;
+SELECT setval('books_id_seq', (SELECT MAX(id) FROM books));
+SELECT setval('categories_id_seq', (SELECT MAX(id) FROM categories));

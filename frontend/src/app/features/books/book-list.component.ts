@@ -20,7 +20,11 @@ import { Category } from '../../core/models/category.model';
         </button>      <h2 style="margin-top: 1rem;">{{ category?.name }}</h2>
     
         @for (book of books; track book) {
-          <div class="card" (click)="goToDetail(book.id)" style="cursor:pointer;">
+          <div class="card" 
+              (click)="goToDetail(book.id)"
+              (keyup.enter)="goToDetail(book.id)"
+              tabindex="0"
+              role="button">
             <div>
               <div class="card-title">{{ book.title }}</div>
               <div class="card-sub">{{ book.author }}</div>

@@ -17,7 +17,11 @@ import { Book } from '../../core/models/book.model';
     
       <div style="margin-top: 1rem;">
         @for (loan of loans; track loan) {
-          <div class="card" (click)="goToDetail(loan.bookId)" style="cursor:pointer;">
+          <div class="card"
+              (click)="goToDetail(loan.bookId)"
+              (keyup.enter)="goToDetail(loan.bookId)"
+              tabindex="0"
+              role="button">
             <div>
               <div class="card-title">{{ getBookTitle(loan.bookId) }}</div>
               <span class="badge" [class.badge-active]="!loan.returned" [class.badge-returned]="loan.returned">
